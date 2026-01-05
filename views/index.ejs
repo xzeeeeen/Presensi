@@ -104,25 +104,11 @@ function copyText(id){
   <div id="dt" class="datetime"></div>
 </div>
 
+<!-- ================= DEKRIPSI (ATAS) ================= -->
 <div class="card">
-<h3>Enkripsi</h3>
-<form method="POST" action="/encrypt">
-  <textarea name="text" placeholder="Pastekan di sini..." required></textarea>
-  <button>Enkripsi</button>
-</form>
-
-<% if (encrypted) { %>
-<div class="result">
-  <button class="copy" onclick="copyText('enc')">Copy</button>
-  <div id="enc"><%= encrypted %></div>
-</div>
-<% } %>
-</div>
-
-<div class="card">
-<h3>Dekripsi</h3>
+<h3>Dekripsi Absen</h3>
 <form method="POST" action="/decrypt">
-  <textarea name="text" placeholder="Pastekan di sini..." required></textarea>
+  <textarea name="text" placeholder="Pastekan kode absen di sini..." required></textarea>
   <button>Dekripsi</button>
 </form>
 
@@ -130,6 +116,22 @@ function copyText(id){
 <div class="result">
   <button class="copy" onclick="copyText('dec')">Copy</button>
   <div id="dec"><%= decrypted %></div>
+</div>
+<% } %>
+</div>
+
+<!-- ================= ENKRIPSI (BAWAH) ================= -->
+<div class="card">
+<h3>Enkripsi Absen</h3>
+<form method="POST" action="/encrypt">
+  <textarea name="text" placeholder="Pastekan data (NIM | Nama | Jam)..." required></textarea>
+  <button>Enkripsi</button>
+</form>
+
+<% if (encrypted) { %>
+<div class="result">
+  <button class="copy" onclick="copyText('enc')">Copy</button>
+  <div id="enc"><%= encrypted %></div>
 </div>
 <% } %>
 </div>
