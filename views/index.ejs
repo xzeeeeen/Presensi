@@ -14,7 +14,7 @@ body{
   background:linear-gradient(160deg,#0f2027,#203a43,#2c5364);
   color:#fff;
   margin:0;
-  padding:24px;
+  padding:22px;
   min-height:100vh;
 }
 .container{max-width:420px;margin:auto}
@@ -41,7 +41,9 @@ textarea{
   min-height:90px;
   background:#1f2a33;
   color:#fff;
+  font-size:14px;
 }
+textarea::placeholder{color:#9aa7ad}
 
 button{
   width:100%;
@@ -57,25 +59,46 @@ button{
 .result{
   margin-top:14px;
   padding:12px;
-  background:#272727;
-  border-radius:10px;
+  background:#1e2a32;
+  border-radius:12px;
   word-break:break-all;
-  position:relative;
+  font-size:14px;
 }
 
 .copy{
-  position:absolute;
-  top:8px;
-  right:8px;
-  font-size:11px;
+  display:inline-block;
+  margin-bottom:8px;
+  font-size:12px;
   background:#03DAC5;
   color:#000;
   border:none;
-  border-radius:6px;
-  padding:3px 8px;
+  border-radius:8px;
+  padding:6px 10px;
+  cursor:pointer;
 }
 
-.footer{text-align:center;font-size:13px;color:#aaa;margin-top:26px}
+.history-item{
+  background:#1f2a33;
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:8px;
+  font-size:13px;
+  word-break:break-all;
+}
+
+.note{
+  font-size:11px;
+  color:#9aa7ad;
+  text-align:center;
+  margin-top:8px;
+}
+
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:#aaa;
+  margin-top:28px;
+}
 .footer a{color:#03DAC5;text-decoration:none}
 </style>
 
@@ -91,24 +114,89 @@ setInterval(updateDateTime,1000);
 function copyText(id){
   navigator.clipboard.writeText(document.getElementById(id).innerText);
 }
+
+/* ===== HISTORY LOCAL (AMAN, TANPA SERVER) ===== */
+function saveHistory(type,value){
+  let h=JSON.parse(localStorage.getItem(type))||[];
+  h.unshift(value);
+  if(h.length>5) h.pop();
+  localStorage.setItem(type,JSON.stringify(h));
+}
+
+function loadHistory(){
+  let h=JSON.parse(localStorage.getItem("decrypt"))||[];
+  let el=document.getElementById("history");
+  el.innerHTML=h.length
+    ? h.map(v=>`<div class="history-item">${v}</div>`).join("")
+    : `<div class="note">Belum ada riwayat</div>`;
+}
 </script>
 </head>
 
-<body onload="updateDateTime()">
+<body onload="updateDateTime();loadHistory()">
 
 <div class="container">
 
 <div class="header">
   <h1>SIA Absensi</h1>
-  <div class="version">Version 1.6.9</div>
+  <div class="version">Version 1.6.9+</div>
   <div id="dt" class="datetime"></div>
 </div>
 
 <!-- ================= DEKRIPSI (ATAS) ================= -->
 <div class="card">
 <h3>Dekripsi Absen</h3>
+
 <form method="POST" action="/decrypt">
   <textarea name="text" placeholder="Pastekan kode absen di sini..." required></textarea>
+  <button>Dekripsi</button>
+</form>
+
+<% if (decrypted) { %>
+<script>saveHistory("decrypt","<%= decrypted %>")</script>
+<div class="result">
+  <button class="copy" onclick="copyText('dec')">Copy</button>
+  <div id="dec"><%= decrypted %></div>
+</div>
+<% } %>
+
+<div class="note">
+Format hasil: KodeMatkul,Pertemuan,Tanggal,JamMulai-JamSelesai
+</div>
+</div>
+
+<!-- ================= HISTORY ================= -->
+<div class="card">
+<h3>Riwayat Terakhir</h3>
+<div id="history"></div>
+<div class="note">Data hanya tersimpan di perangkat</div>
+</div>
+
+<!-- ================= ENKRIPSI (BAWAH) ================= -->
+<div class="card">
+<h3>Enkripsi Absen</h3>
+
+<form method="POST" action="/encrypt">
+  <textarea name="text" placeholder="Pastekan di sini (NIM,Nama,KodeMatkul,Pertemuan,Tanggal,JamMulai-JamSelesai)" required></textarea>
+  <button>Enkripsi</button>
+</form>
+
+<% if (encrypted) { %>
+<div class="result">
+  <button class="copy" onclick="copyText('enc')">Copy</button>
+  <div id="enc"><%= encrypted %></div>
+</div>
+<% } %>
+</div>
+
+<div class="footer">
+Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a>
+</div>
+
+</div>
+
+</body>
+</html>  <textarea name="text" placeholder="Pastekan kode absen di sini..." required></textarea>
   <button>Dekripsi</button>
 </form>
 
