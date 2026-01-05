@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIA Absensi</title>
+    <style>
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background-color: #121212;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #03DAC5;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            margin-bottom: 15px;
+            color: #03DAC5;
+        }
+
+        .datetime {
+            margin-bottom: 20px;
+            font-size: 18px;
+            color: #757575;
+        }
+
+        form {
+            background-color: #1E1E1E;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 600px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #2E2E2E;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        input[type="text"]::placeholder {
+            color: #757575;
+        }
+
+        input[type="submit"] {
+            background-color: #03DAC5;
+            color: #000000;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #018786;
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #272727;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            font-size: 16px;
+        }
+
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #757575;
+        }
+
+        .footer a {
+            color: #03DAC5;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #018786;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .button-group a {
+            padding: 10px 15px;
+            border-radius: 8px;
+            background-color: #03DAC5;
+            color: #000;
+            text-decoration: none;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .button-group a:hover {
+            background-color: #018786;
+            transform: translateY(-2px);
+        }
+    </style>
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('id-ID', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const time = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('datetime').textContent = `${date}, ${time}`;
+        }
+
+        setInterval(updateDateTime, 1000);
+    </script>
+</head>
+<body onload="updateDateTime()">
+    <h1>SIA Absensi</h1>
+    <div id="datetime" class="datetime"></div>
+
+    <h3>Dekripsi</h3>
+    <form action="/decrypt" method="POST">
+        <input type="text" name="text" placeholder="Masukkan teks" required>
+        <input type="submit" name="submit" value="Dekripsi">
+    </form>
+    <% if (decrypted) { %>
+        <div class="result">Hasil: <%= decrypted %></div>
+    <% } %>
+
+    <br>
+
+    <h3>Enkripsi</h3>
+    <form action="/encrypt" method="POST">
+        <input type="text" name="text" placeholder="Masukkan teks" required>
+        <input type="submit" name="submit" value="Enkripsi">
+    </form>
+    <% if (encrypted) { %>
+        <div class="result">Hasil: <%= encrypted %></div>
+    <% } %>
+
+    <div class="footer">Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a></div>
+</body>
+</html>
