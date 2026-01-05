@@ -6,9 +6,9 @@ const path = require("path");
 const app = express();
 const key = "utyjombor123";
 
-// setting view engine EJS
+// setting ejs
 app.set("view engine", "ejs");
-app.set("views", path.join(process.cwd(), "views"));
+app.set("views", path.join(__dirname, "views"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,5 +40,5 @@ app.post("/decrypt", (req, res) => {
   });
 });
 
-// ⛔ JANGAN app.listen di Vercel
+// ⛔ JANGAN app.listen
 module.exports = app;
