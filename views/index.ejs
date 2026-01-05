@@ -140,6 +140,37 @@ setInterval(updateDateTime, 1000);
 
 </body>
 </html>
+    <% if (decrypted) { %>
+      <div class="result">
+        <strong>Hasil:</strong><br>
+        <%= decrypted %>
+      </div>
+    <% } %>
+  </div>
+
+  <!-- ENKRIPSI -->
+  <div class="card">
+    <h3>Enkripsi</h3>
+    <form method="POST" action="/encrypt">
+      <input type="text" name="text" placeholder="Masukkan teks" required />
+      <input type="submit" value="Enkripsi" />
+    </form>
+
+    <% if (encrypted) { %>
+      <div class="result">
+        <strong>Hasil:</strong><br>
+        <%= encrypted %>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="footer">
+    Created by <a href="https://github.com/xzeeeeen" style="color:#03DAC5">_xzeeeeen</a>
+  </div>
+</div>
+
+</body>
+</html>
         .button-group a {
             padding: 10px 15px;
             border-radius: 8px;
