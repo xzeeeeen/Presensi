@@ -9,285 +9,87 @@
 
 <style>
 *{box-sizing:border-box}
-
 body{
   font-family:'Poppins',sans-serif;
-  background:radial-gradient(circle at top,#1c3b4a,#0b1c24);
+  background:linear-gradient(160deg,#0f2027,#203a43,#2c5364);
   color:#fff;
   margin:0;
   padding:24px;
   min-height:100vh;
 }
-
-.container{max-width:460px;margin:auto}
-
+.container{max-width:420px;margin:auto}
 .header{text-align:center;margin-bottom:26px}
-.header h1{margin:0;font-size:32px;color:#03DAC5}
+.header h1{margin:0;font-size:30px;color:#03DAC5}
 .version{font-size:12px;color:#9adfd7}
 .datetime{font-size:13px;color:#cfd8dc;margin-top:6px}
 
-.status{
-  text-align:center;
-  font-size:12px;
-  margin-top:8px;
-  color:#9fffe9;
-}
-
 .card{
-  background:rgba(0,0,0,0.45);
-  backdrop-filter:blur(10px);
-  padding:22px;
-  border-radius:20px;
-  margin-bottom:24px;
-  box-shadow:0 12px 40px rgba(0,0,0,0.45);
+  background:rgba(0,0,0,.35);
+  padding:20px;
+  border-radius:18px;
+  margin-bottom:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
-
 .card h3{text-align:center;color:#03DAC5;margin-bottom:14px}
 
 textarea{
   width:100%;
   padding:14px;
-  border-radius:14px;
+  border-radius:12px;
   border:none;
   resize:none;
   min-height:90px;
-  background:#18252d;
+  background:#1f2a33;
   color:#fff;
-  font-size:14px;
-}
-
-textarea::placeholder{color:#9fb3bd}
-textarea:focus{outline:none;box-shadow:0 0 0 2px #03DAC5}
-
-.counter{
-  text-align:right;
-  font-size:11px;
-  color:#9fb3bd;
-  margin-top:4px;
 }
 
 button{
   width:100%;
-  margin-top:14px;
+  margin-top:12px;
   padding:14px;
-  background:linear-gradient(135deg,#03DAC5,#00bfa5);
+  background:#03DAC5;
   border:none;
-  border-radius:16px;
+  border-radius:12px;
   font-weight:600;
-  font-size:15px;
   cursor:pointer;
 }
 
 .result{
-  margin-top:18px;
-  padding:14px;
-  background:rgba(0,0,0,0.45);
-  border-radius:14px;
-  font-size:14px;
+  margin-top:14px;
+  padding:12px;
+  background:#272727;
+  border-radius:10px;
   word-break:break-all;
-  border-left:4px solid #03DAC5;
   position:relative;
 }
 
-.copy-btn{
+.copy{
   position:absolute;
-  top:10px;
-  right:10px;
+  top:8px;
+  right:8px;
+  font-size:11px;
   background:#03DAC5;
   color:#000;
   border:none;
-  border-radius:8px;
-  font-size:12px;
-  padding:4px 10px;
+  border-radius:6px;
+  padding:3px 8px;
 }
 
-.history{
-  margin-top:14px;
-  font-size:12px;
-}
-
-.history div{
-  background:#16242b;
-  padding:8px;
-  border-radius:8px;
-  margin-top:6px;
-  cursor:pointer;
-}
-
-.hint{
-  text-align:center;
-  font-size:11px;
-  color:#9fb3bd;
-  margin-top:10px;
-}
-
-.footer{
-  text-align:center;
-  margin-top:28px;
-  font-size:13px;
-  color:#cfd8dc;
-}
-
+.footer{text-align:center;font-size:13px;color:#aaa;margin-top:26px}
 .footer a{color:#03DAC5;text-decoration:none}
 </style>
 
 <script>
 function updateDateTime(){
-  const now=new Date();
-  document.getElementById("datetime").innerText=
-    now.toLocaleDateString("id-ID",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
-    +" • "+now.toLocaleTimeString("id-ID");
+  const n=new Date();
+  document.getElementById("dt").innerText=
+    n.toLocaleDateString("id-ID",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
+    +" • "+n.toLocaleTimeString("id-ID");
 }
 setInterval(updateDateTime,1000);
 
-function countChar(el,id){
-  document.getElementById(id).innerText=el.value.length+" karakter";
-}
-
-function copyText(text){
-  navigator.clipboard.writeText(text);
-  saveHistory(text);
-}
-
-function saveHistory(text){
-  let h=JSON.parse(localStorage.getItem("siaHistory")||"[]");
-  h.unshift(text);
-  h=h.slice(0,3);
-  localStorage.setItem("siaHistory",JSON.stringify(h));
-}
-
-function loadHistory(){
-  let h=JSON.parse(localStorage.getItem("siaHistory")||"[]");
-  let box=document.getElementById("historyBox");
-  box.innerHTML="";
-  h.forEach(i=>{
-    let d=document.createElement("div");
-    d.innerText=i;
-    d.onclick=()=>copyText(i);
-    box.appendChild(d);
-  });
-}
-
-window.onload=()=>{
-  updateDateTime();
-  loadHistory();
-};
-</script>
-</head>
-
-<body>
-
-<div class="container">
-
-<div class="header">
-  <h1>SIA Absensi</h1>
-  <div class="version">Version 1.6.9+</div>
-  <div id="datetime" class="datetime"></div>
-  <div class="status">🟢 Sistem siap digunakan</div>
-</div>
-
-<div class="card">
-<h3>Proses Absen</h3>
-
-<form method="POST" action="/encrypt">
-<textarea name="text" placeholder="Pastekan di sini..." oninput="countChar(this,'count')" required></textarea>
-<div id="count" class="counter">0 karakter</div>
-<button>Proses</button>
-</form>
-
-<% if (encrypted) { %>
-<div class="result">
-  <button class="copy-btn" onclick="copyText('<%= encrypted %>')">Copy</button>
-  <%= encrypted %>
-</div>
-<% } %>
-
-<div class="history">
-  <strong>Riwayat Terakhir</strong>
-  <div id="historyBox"></div>
-</div>
-
-<div class="hint">
-  🔒 Data tidak disimpan di server • Aman & lokal
-</div>
-</div>
-
-<div class="footer">
-Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a>
-</div>
-
-</div>
-
-</body>
-</html>  font-size:14px;
-  line-height:1.6;
-  word-break:break-all;
-  border-left:4px solid #03DAC5;
-}
-
-.result.error{
-  border-left-color:#ff5252;
-  color:#ffb3b3;
-}
-
-.copy-btn{
-  margin-top:10px;
-  padding:10px;
-  background:#1f2a33;
-  border-radius:12px;
-  font-size:13px;
-  text-align:center;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.copy-btn:hover{
-  background:#26323d;
-}
-
-.copy-success{
-  margin-top:6px;
-  font-size:12px;
-  color:#03DAC5;
-  text-align:center;
-  display:none;
-}
-
-.footer{
-  text-align:center;
-  margin-top:30px;
-  font-size:13px;
-  color:#cfd8dc;
-}
-
-.footer a{
-  color:#03DAC5;
-  text-decoration:none;
-  font-weight:500;
-}
-</style>
-
-<script>
-function updateDateTime(){
-  const now = new Date();
-  document.getElementById("datetime").innerText =
-    now.toLocaleDateString("id-ID",{
-      weekday:"long",
-      year:"numeric",
-      month:"long",
-      day:"numeric"
-    }) + " • " +
-    now.toLocaleTimeString("id-ID");
-}
-setInterval(updateDateTime,1000);
-
-function copyText(id, feedback){
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text).then(()=>{
-    const el = document.getElementById(feedback);
-    el.style.display="block";
-    setTimeout(()=>el.style.display="none",1500);
-  });
+function copyText(id){
+  navigator.clipboard.writeText(document.getElementById(id).innerText);
 }
 </script>
 </head>
@@ -296,66 +98,45 @@ function copyText(id, feedback){
 
 <div class="container">
 
-  <!-- HEADER -->
-  <div class="header">
-    <h1>SIA Absensi</h1>
-    <div class="version">Version 1.6.9</div>
-    <div id="datetime" class="datetime"></div>
-  </div>
+<div class="header">
+  <h1>SIA Absensi</h1>
+  <div class="version">Version 1.6.9</div>
+  <div id="dt" class="datetime"></div>
+</div>
 
-  <!-- DEKRIPSI -->
-  <div class="card">
-    <h3>Dekripsi Absen</h3>
+<div class="card">
+<h3>Enkripsi</h3>
+<form method="POST" action="/encrypt">
+  <textarea name="text" placeholder="Pastekan di sini..." required></textarea>
+  <button>Enkripsi</button>
+</form>
 
-    <form method="POST" action="/decrypt">
-      <input type="text" name="text" placeholder="Masukkan teks terenkripsi" required>
-      <button>Dekripsi</button>
-    </form>
+<% if (encrypted) { %>
+<div class="result">
+  <button class="copy" onclick="copyText('enc')">Copy</button>
+  <div id="enc"><%= encrypted %></div>
+</div>
+<% } %>
+</div>
 
-    <% if (mode === "decrypt") { %>
-      <div class="result <%= decrypted.startsWith('❌') ? 'error' : '' %>">
-        <strong>Hasil:</strong><br>
-        <span id="decryptResult"><%= decrypted %></span>
-      </div>
+<div class="card">
+<h3>Dekripsi</h3>
+<form method="POST" action="/decrypt">
+  <textarea name="text" placeholder="Pastekan di sini..." required></textarea>
+  <button>Dekripsi</button>
+</form>
 
-      <div class="copy-btn"
-           onclick="copyText('decryptResult','copyDecrypt')">
-        📋 Salin hasil
-      </div>
-      <div id="copyDecrypt" class="copy-success">✔ Berhasil disalin</div>
-    <% } %>
-  </div>
+<% if (decrypted) { %>
+<div class="result">
+  <button class="copy" onclick="copyText('dec')">Copy</button>
+  <div id="dec"><%= decrypted %></div>
+</div>
+<% } %>
+</div>
 
-  <!-- ENKRIPSI -->
-  <div class="card">
-    <h3>Enkripsi Absen</h3>
-
-    <form method="POST" action="/encrypt">
-      <input type="text" name="text" placeholder="Masukkan teks (NIM | Nama | Jam)" required>
-      <button>Enkripsi</button>
-    </form>
-
-    <% if (mode === "encrypt") { %>
-      <div class="result">
-        <strong>Hasil:</strong><br>
-        <span id="encryptResult"><%= encrypted %></span>
-      </div>
-
-      <div class="copy-btn"
-           onclick="copyText('encryptResult','copyEncrypt')">
-        📋 Salin hasil
-      </div>
-      <div id="copyEncrypt" class="copy-success">✔ Berhasil disalin</div>
-    <% } %>
-  </div>
-
-  <!-- FOOTER -->
-  <div class="footer">
-    Created by
-    <a href="https://github.com/xzeeeeen" target="_blank">
-      _xzeeeeen
-    </a>
-  </div>
+<div class="footer">
+Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a>
+</div>
 
 </div>
 
