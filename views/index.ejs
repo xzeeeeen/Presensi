@@ -115,13 +115,12 @@ setInterval(updateDateTime,1000);
       <input type="submit" value="Dekripsi" />
     </form>
 
-    <% if (typeof decrypted !== 'undefined' && decrypted) { %>
-      <div class="result">
-        <strong>Hasil Dekripsi:</strong><br>
-        <%= decrypted %>
-      </div>
-    <% } %>
+    <% if (typeof decrypted !== 'undefined') { %>
+  <div class="result">
+    <strong>Hasil Dekripsi:</strong><br>
+    <%= decrypted || '❌ Gagal didekripsi (teks / key salah)' %>
   </div>
+<% } %>
 
   <!-- ENKRIPSI -->
   <div class="card">
