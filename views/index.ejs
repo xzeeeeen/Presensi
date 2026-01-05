@@ -18,7 +18,8 @@ body{
   min-height:100vh;
 }
 .container{max-width:420px;margin:auto}
-.header{text-align:center;margin-bottom:26px}
+
+.header{text-align:center;margin-bottom:24px}
 .header h1{margin:0;font-size:30px;color:#03DAC5}
 .version{font-size:12px;color:#9adfd7}
 .datetime{font-size:13px;color:#cfd8dc;margin-top:6px}
@@ -30,7 +31,12 @@ body{
   margin-bottom:20px;
   box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
-.card h3{text-align:center;color:#03DAC5;margin-bottom:14px}
+
+.card h3{
+  text-align:center;
+  color:#03DAC5;
+  margin-bottom:14px;
+}
 
 textarea{
   width:100%;
@@ -43,6 +49,7 @@ textarea{
   color:#fff;
   font-size:14px;
 }
+
 textarea::placeholder{color:#9aa7ad}
 
 button{
@@ -58,7 +65,7 @@ button{
 
 .result{
   margin-top:14px;
-  padding:12px;
+  padding:14px;
   background:#1e2a32;
   border-radius:12px;
   word-break:break-all;
@@ -66,7 +73,7 @@ button{
 }
 
 .copy{
-  display:inline-block;
+  display:block;
   margin-bottom:8px;
   font-size:12px;
   background:#03DAC5;
@@ -75,6 +82,7 @@ button{
   border-radius:8px;
   padding:6px 10px;
   cursor:pointer;
+  width:fit-content;
 }
 
 .history-item{
@@ -105,7 +113,7 @@ button{
 <script>
 function updateDateTime(){
   const n=new Date();
-  document.getElementById("dt").innerText=
+  document.getElementById("dt").innerText =
     n.toLocaleDateString("id-ID",{weekday:"long",year:"numeric",month:"long",day:"numeric"})
     +" • "+n.toLocaleTimeString("id-ID");
 }
@@ -115,18 +123,18 @@ function copyText(id){
   navigator.clipboard.writeText(document.getElementById(id).innerText);
 }
 
-/* ===== HISTORY LOCAL (AMAN, TANPA SERVER) ===== */
-function saveHistory(type,value){
-  let h=JSON.parse(localStorage.getItem(type))||[];
+/* ===== RIWAYAT LOKAL ===== */
+function saveHistory(value){
+  let h=JSON.parse(localStorage.getItem("history"))||[];
   h.unshift(value);
   if(h.length>5) h.pop();
-  localStorage.setItem(type,JSON.stringify(h));
+  localStorage.setItem("history",JSON.stringify(h));
 }
 
 function loadHistory(){
-  let h=JSON.parse(localStorage.getItem("decrypt"))||[];
+  let h=JSON.parse(localStorage.getItem("history"))||[];
   let el=document.getElementById("history");
-  el.innerHTML=h.length
+  el.innerHTML = h.length
     ? h.map(v=>`<div class="history-item">${v}</div>`).join("")
     : `<div class="note">Belum ada riwayat</div>`;
 }
@@ -137,13 +145,14 @@ function loadHistory(){
 
 <div class="container">
 
+<!-- HEADER -->
 <div class="header">
   <h1>SIA Absensi</h1>
   <div class="version">Version 1.6.9+</div>
   <div id="dt" class="datetime"></div>
 </div>
 
-<!-- ================= DEKRIPSI (ATAS) ================= -->
+<!-- DEKRIPSI -->
 <div class="card">
 <h3>Dekripsi Absen</h3>
 
@@ -153,7 +162,7 @@ function loadHistory(){
 </form>
 
 <% if (decrypted) { %>
-<script>saveHistory("decrypt","<%= decrypted %>")</script>
+<script>saveHistory("<%= decrypted %>")</script>
 <div class="result">
   <button class="copy" onclick="copyText('dec')">Copy</button>
   <div id="dec"><%= decrypted %></div>
@@ -161,74 +170,38 @@ function loadHistory(){
 <% } %>
 
 <div class="note">
-Format hasil: KodeMatkul,Pertemuan,Tanggal,JamMulai-JamSelesai
+Format: KodeMatkul,Pertemuan,Tanggal,JamMulai-JamSelesai
 </div>
 </div>
 
-<!-- ================= HISTORY ================= -->
+<!-- ENKRIPSI -->
+<div class="card">
+<h3>Enkripsi Absen</h3>
+
+<form method="POST" action="/encrypt">
+  <textarea name="text" placeholder="Pastekan (NIM,Nama,KodeMatkul,Pertemuan,Tanggal,JamMulai-JamSelesai)" required></textarea>
+  <button>Enkripsi</button>
+</form>
+
+<% if (encrypted) { %>
+<div class="result">
+  <button class="copy" onclick="copyText('enc')">Copy</button>
+  <div id="enc"><%= encrypted %></div>
+</div>
+<% } %>
+</div>
+
+<!-- RIWAYAT (PALING BAWAH) -->
 <div class="card">
 <h3>Riwayat Terakhir</h3>
 <div id="history"></div>
 <div class="note">Data hanya tersimpan di perangkat</div>
 </div>
 
-<!-- ================= ENKRIPSI (BAWAH) ================= -->
-<div class="card">
-<h3>Enkripsi Absen</h3>
-
-<form method="POST" action="/encrypt">
-  <textarea name="text" placeholder="Pastekan di sini (NIM,Nama,KodeMatkul,Pertemuan,Tanggal,JamMulai-JamSelesai)" required></textarea>
-  <button>Enkripsi</button>
-</form>
-
-<% if (encrypted) { %>
-<div class="result">
-  <button class="copy" onclick="copyText('enc')">Copy</button>
-  <div id="enc"><%= encrypted %></div>
-</div>
-<% } %>
-</div>
-
 <div class="footer">
 Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a>
 </div>
 
 </div>
-
-</body>
-</html>  <textarea name="text" placeholder="Pastekan kode absen di sini..." required></textarea>
-  <button>Dekripsi</button>
-</form>
-
-<% if (decrypted) { %>
-<div class="result">
-  <button class="copy" onclick="copyText('dec')">Copy</button>
-  <div id="dec"><%= decrypted %></div>
-</div>
-<% } %>
-</div>
-
-<!-- ================= ENKRIPSI (BAWAH) ================= -->
-<div class="card">
-<h3>Enkripsi Absen</h3>
-<form method="POST" action="/encrypt">
-  <textarea name="text" placeholder="Pastekan data (NIM | Nama | Jam)..." required></textarea>
-  <button>Enkripsi</button>
-</form>
-
-<% if (encrypted) { %>
-<div class="result">
-  <button class="copy" onclick="copyText('enc')">Copy</button>
-  <div id="enc"><%= encrypted %></div>
-</div>
-<% } %>
-</div>
-
-<div class="footer">
-Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a>
-</div>
-
-</div>
-
 </body>
 </html>
