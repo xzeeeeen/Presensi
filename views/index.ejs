@@ -6,92 +6,98 @@
 <title>SIA Absensi</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+body{
+  font-family:'Poppins',Arial,sans-serif;
+  background:#121212;
+  color:#fff;
+  margin:0;
+  padding:20px;
 }
 
-body {
-  font-family: 'Poppins', Arial, sans-serif;
-  background-color: #121212;
-  color: #ffffff;
-  margin: 0;
-  padding: 20px;
+.container{
+  max-width:420px;
+  margin:auto;
 }
 
-.container {
-  max-width: 420px;
-  margin: auto;
+h1{
+  text-align:center;
+  color:#03DAC5;
+  margin-bottom:5px;
 }
 
-h1 {
-  text-align: center;
-  color: #03DAC5;
+.datetime{
+  text-align:center;
+  font-size:13px;
+  color:#aaa;
+  margin-bottom:20px;
 }
 
-.datetime {
-  text-align: center;
-  font-size: 14px;
-  color: #aaa;
-  margin-bottom: 20px;
+.card{
+  background:#1E1E1E;
+  padding:18px;
+  border-radius:14px;
+  margin-bottom:20px;
 }
 
-.card {
-  background: #1E1E1E;
-  padding: 20px;
-  border-radius: 14px;
-  margin-bottom: 20px;
+.card h3{
+  margin-top:0;
+  text-align:center;
+  color:#03DAC5;
 }
 
-.card h3 {
-  margin-top: 0;
-  color: #03DAC5;
-  text-align: center;
+input[type="text"]{
+  width:100%;
+  padding:14px;
+  border-radius:10px;
+  border:none;
+  background:#2E2E2E;
+  color:#fff;
+  font-size:15px;
+  margin-bottom:12px;
 }
 
-input[type="text"] {
-  width: 100%;
-  padding: 12px;
-  border-radius: 8px;
-  border: none;
-  background: #2E2E2E;
-  color: #fff;
-  margin-bottom: 12px;
+input[type="submit"]{
+  width:100%;
+  padding:14px;
+  background:#03DAC5;
+  color:#000;
+  border:none;
+  border-radius:10px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-input[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background: #03DAC5;
-  border: none;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
+.result{
+  margin-top:12px;
+  padding:12px;
+  background:#272727;
+  border-radius:10px;
+  word-break:break-all;
+  font-size:14px;
 }
 
-.result {
-  margin-top: 12px;
-  padding: 12px;
-  background: #272727;
-  border-radius: 8px;
-  word-break: break-all;
-}
-
-.footer {
-  text-align: center;
-  font-size: 13px;
-  color: #888;
+.footer{
+  text-align:center;
+  font-size:13px;
+  color:#777;
 }
 </style>
 
 <script>
-function updateDateTime() {
-  const now = new Date();
-  document.getElementById("datetime").innerText =
-    now.toLocaleDateString("id-ID", { weekday:"long", year:"numeric", month:"long", day:"numeric" }) +
-    " • " +
+function updateDateTime(){
+  const now=new Date();
+  document.getElementById("datetime").innerText=
+    now.toLocaleDateString("id-ID",{
+      weekday:"long",
+      year:"numeric",
+      month:"long",
+      day:"numeric"
+    })+" • "+
     now.toLocaleTimeString("id-ID");
 }
-setInterval(updateDateTime, 1000);
+setInterval(updateDateTime,1000);
 </script>
 </head>
 
@@ -109,9 +115,9 @@ setInterval(updateDateTime, 1000);
       <input type="submit" value="Dekripsi" />
     </form>
 
-    <% if (decrypted) { %>
+    <% if (typeof decrypted !== 'undefined' && decrypted) { %>
       <div class="result">
-        <strong>Hasil:</strong><br>
+        <strong>Hasil Dekripsi:</strong><br>
         <%= decrypted %>
       </div>
     <% } %>
@@ -125,111 +131,18 @@ setInterval(updateDateTime, 1000);
       <input type="submit" value="Enkripsi" />
     </form>
 
-    <% if (encrypted) { %>
+    <% if (typeof encrypted !== 'undefined' && encrypted) { %>
       <div class="result">
-        <strong>Hasil:</strong><br>
+        <strong>Hasil Enkripsi:</strong><br>
         <%= encrypted %>
       </div>
     <% } %>
   </div>
 
   <div class="footer">
-    Created by <a href="https://github.com/xzeeeeen" style="color:#03DAC5">_xzeeeeen</a>
+    Created by <a href="https://github.com/xzeeeeen" style="color:#03DAC5;text-decoration:none">_xzeeeeen</a>
   </div>
 </div>
 
-</body>
-</html>
-    <% if (decrypted) { %>
-      <div class="result">
-        <strong>Hasil:</strong><br>
-        <%= decrypted %>
-      </div>
-    <% } %>
-  </div>
-
-  <!-- ENKRIPSI -->
-  <div class="card">
-    <h3>Enkripsi</h3>
-    <form method="POST" action="/encrypt">
-      <input type="text" name="text" placeholder="Masukkan teks" required />
-      <input type="submit" value="Enkripsi" />
-    </form>
-
-    <% if (encrypted) { %>
-      <div class="result">
-        <strong>Hasil:</strong><br>
-        <%= encrypted %>
-      </div>
-    <% } %>
-  </div>
-
-  <div class="footer">
-    Created by <a href="https://github.com/xzeeeeen" style="color:#03DAC5">_xzeeeeen</a>
-  </div>
-</div>
-
-</body>
-</html>
-        .button-group a {
-            padding: 10px 15px;
-            border-radius: 8px;
-            background-color: #03DAC5;
-            color: #000;
-            text-decoration: none;
-            text-align: center;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .button-group a:hover {
-            background-color: #018786;
-            transform: translateY(-2px);
-        }
-    </style>
-    <script>
-        function updateDateTime() {
-            const now = new Date();
-            const date = now.toLocaleDateString('id-ID', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const time = now.toLocaleTimeString('id-ID', {
-                hour: '2-digit',
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            document.getElementById('datetime').textContent = `${date}, ${time}`;
-        }
-
-        setInterval(updateDateTime, 1000);
-    </script>
-</head>
-<body onload="updateDateTime()">
-    <h1>SIA Absensi</h1>
-    <div id="datetime" class="datetime"></div>
-
-    <h3>Dekripsi</h3>
-    <form action="/decrypt" method="POST">
-        <input type="text" name="text" placeholder="Masukkan teks" required>
-        <input type="submit" name="submit" value="Dekripsi">
-    </form>
-    <% if (decrypted) { %>
-        <div class="result">Hasil: <%= decrypted %></div>
-    <% } %>
-
-    <br>
-
-    <h3>Enkripsi</h3>
-    <form action="/encrypt" method="POST">
-        <input type="text" name="text" placeholder="Masukkan teks" required>
-        <input type="submit" name="submit" value="Enkripsi">
-    </form>
-    <% if (encrypted) { %>
-        <div class="result">Hasil: <%= encrypted %></div>
-    <% } %>
-
-    <div class="footer">Created by <a href="https://github.com/xzeeeeen">_xzeeeeen</a></div>
 </body>
 </html>
